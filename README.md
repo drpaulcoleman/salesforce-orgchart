@@ -90,7 +90,6 @@ If you still see VFRemote after deploy, you are on a **cached** page, a **differ
 Prerequisites: Salesforce CLI (`sf`), target org with API access.
 
 ```bash
-cd salesforce
 sf project deploy start --source-dir force-app --target-org YOUR_ALIAS
 sf apex run test --tests OrgChartServiceTest,OrgChartControllerTest,OrgChartPageControllerTest --target-org YOUR_ALIAS --result-format human
 ```
