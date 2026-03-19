@@ -147,6 +147,3 @@ After editing `assets/orgchart_magic_salesforce.js` or `salesforce/orgchart-ui/f
 - `pages/OrgChart.page` — Host page  
 - `staticresources/OrgChartAssets.zip` — D3, jQuery, SLDS CSS, `orgchart_magic.js`, `features/settings.html`
 
-## Sources.png / expanded.png
-
-Those screenshots are not stored in metadata. **Sources.png** maps to the script/resource dependency diagram above; **expanded.png** matches **click-to-expand** branches (`click` toggles `_children` / `children`) and **search** driving `show()` → `displayPath()` link highlighting, unchanged from the original D3 behavior.
