@@ -1,0 +1,11 @@
+.frame-wrap {
+    width: 100%;
+    min-height: 80vh;
+}
+
+.chart-frame {
+    width: 100%;
+    min-height: 80vh;
+    border: 0;
+    display: block;
+}

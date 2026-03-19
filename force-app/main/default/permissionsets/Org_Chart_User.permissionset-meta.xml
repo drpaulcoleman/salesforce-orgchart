@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Access to the org chart Visualforce page, REST API, and Aura controller.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+    <label>Org Chart User</label>
+    <classAccesses>
+        <apexClass>OrgChartController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>OrgChartPageController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>OrgChartRest</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <pageAccesses>
+        <apexPage>OrgChart</apexPage>
+        <enabled>true</enabled>
+    </pageAccesses>
+</PermissionSet>

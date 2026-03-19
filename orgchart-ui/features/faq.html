@@ -1,0 +1,21 @@
+<div class="slds-modal__header">
+    <h2 id="model-heading" class="slds-modal__title">FAQ</h2>
+    <button type="button" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" id="modal-close" title="Close" data-orgchart-close="1">
+        <span class="slds-assistive-text">Close</span>
+        <span aria-hidden="true" class="slds-text-heading_small">×</span>
+    </button>
+</div>
+<div class="slds-modal__content slds-p-around_medium" id="modal-content">
+    <div class="slds-text-longform">
+        <h3 class="slds-text-heading_small slds-m-bottom_x-small">My personal information is not being displayed correctly, how can it be fixed?</h3>
+        <p class="slds-m-bottom_medium">OrgChart pulls information directly from each employee’s Salesforce user profile and <code>User.ManagerId</code>. Please check the information on your profile and ensure your manager is filled in. If you have changed your name or need additional help correcting your information, see your team’s <strong>Help Article</strong> (configure the link in <code>features/faq.html</code> when you deploy). Updates may take up to 24 hours to appear in OrgChart.</p>
+        <h3 class="slds-text-heading_small slds-m-bottom_x-small">Where does the chart data come from?</h3>
+        <p class="slds-m-bottom_medium">Active Salesforce users and reporting hierarchy, subject to your org’s sharing and field-level security.</p>
+        <h3 class="slds-text-heading_small slds-m-bottom_x-small">Need more help?</h3>
+        <p class="slds-m-bottom_small">Open your team’s <strong>Help Article</strong> or internal documentation for org-chart policies and data quality guidelines.</p>
+        <p class="slds-m-top_small"><a href="#" class="slds-button slds-button_neutral" onclick="return false;" title="Placeholder">Example Help Article (configure URL)</a></p>
+    </div>
+</div>
+<div class="slds-modal__footer">
+    <button type="button" class="slds-button slds-button_neutral" data-orgchart-close="1">Close</button>
+</div>

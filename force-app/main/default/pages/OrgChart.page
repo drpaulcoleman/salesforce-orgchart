@@ -1,0 +1,187 @@
+<apex:page controller="OrgChartPageController"
+    showHeader="false"
+    sidebar="false"
+    standardStylesheets="false"
+    docType="html-5.0"
+    applyHtmlTag="false"
+    applyBodyTag="false"
+    cache="false">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Org Chart</title>
+    <!--
+      SLDS @font-face uses paths like ../fonts/webfonts/...; on Visualforce, relative URLs in the
+      stylesheet resolve from /resource/&lt;cache&gt;/ (not .../OrgChartAssets/...), causing 404s.
+      Register fonts here with URLFOR so each file resolves under the static resource.
+    -->
+    <style type="text/css">
+        @font-face {
+            font-family: "Salesforce Sans";
+            src: url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Light.woff2')}" escape="false"/>') format('woff2'),
+                 url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Light.woff')}" escape="false"/>') format('woff');
+            font-weight: 300;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Salesforce Sans";
+            src: url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-LightItalic.woff2')}" escape="false"/>') format('woff2'),
+                 url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-LightItalic.woff')}" escape="false"/>') format('woff');
+            font-style: italic;
+            font-weight: 300;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Salesforce Sans";
+            src: url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Regular.woff2')}" escape="false"/>') format('woff2'),
+                 url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Regular.woff')}" escape="false"/>') format('woff');
+            font-weight: 400;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Salesforce Sans";
+            src: url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Italic.woff2')}" escape="false"/>') format('woff2'),
+                 url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Italic.woff')}" escape="false"/>') format('woff');
+            font-style: italic;
+            font-weight: 400;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Salesforce Sans";
+            src: url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Bold.woff2')}" escape="false"/>') format('woff2'),
+                 url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-Bold.woff')}" escape="false"/>') format('woff');
+            font-weight: 700;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: "Salesforce Sans";
+            src: url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-BoldItalic.woff2')}" escape="false"/>') format('woff2'),
+                 url('<apex:outputText value="{!URLFOR($Resource.OrgChartAssets, 'fonts/webfonts/SalesforceSans-BoldItalic.woff')}" escape="false"/>') format('woff');
+            font-style: italic;
+            font-weight: 700;
+            font-display: swap;
+        }
+    </style>
+    <apex:stylesheet value="{!URLFOR($Resource.OrgChartAssets, 'salesforce-lightning-design-system.min.css')}"/>
+    <apex:stylesheet value="{!URLFOR($Resource.OrgChartAssets, 'style.css')}"/>
+    <!--
+      Apex REST on *.vf.force.com often returns 401 with cookie-only fetch; the session cookie may not
+      apply to /services/apexrest the same way. $Api.Session_ID + Authorization is the standard VF pattern
+      for same-page API calls (use JSENCODE; mitigate XSS on this page).
+    -->
+    <script type="text/javascript">
+        window.ORGCHART_ROOT_FEDERATION_ID = {!rootFederationIdJson};
+        window.ORGCHART_FEATURES = ['faq', 'contact', 'settings'];
+        window.ORGCHART_ASSET_BASE = '{!URLFOR($Resource.OrgChartAssets)}/';
+        window.ORGCHART_REST_BASE = '/services/apexrest/OrgChart/v1';
+        window.ORGCHART_SESSION_ID = '{!JSENCODE($Api.Session_ID)}';
+    </script>
+    <apex:includeScript value="{!URLFOR($Resource.OrgChartAssets, 'jquery-3.3.1.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.OrgChartAssets, 'd3.v3.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.OrgChartAssets, 'orgchart_magic.js')}"/>
+</head>
+<body>
+<div>
+    <header>
+        <div class="slds-global-header slds-grid slds-grid_align-spread">
+            <div class="slds-global-header__item">
+                <div class="slds-text-heading_small slds-p-left_small">Org Chart</div>
+            </div>
+            <div class="slds-global-header__item slds-global-header__item_search">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label slds-assistive-text" for="search">Search</label>
+                    <div class="slds-form-element__control">
+                        <div class="slds-combobox_container">
+                            <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click"
+                                 aria-expanded="false" aria-haspopup="listbox" role="combobox">
+                                <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_left-right"
+                                     role="none">
+                                    <span class="slds-input__icon slds-input__icon_left slds-icon-text-default slds-p-left_x-small" aria-hidden="true">&#128269;</span>
+                                    <input type="text" id="search" placeholder="Search by name, email, username, or title"
+                                           class="slds-input slds-combobox__input" name="nameSearch"
+                                           aria-autocomplete="list" aria-controls="search-results-container"
+                                           autocomplete="off" role="textbox"/>
+                                    <button type="button" id="resetButton"
+                                            class="slds-button slds-button_neutral slds-input__icon slds-input__icon_right"
+                                            title="Collapse tree" onclick="reset();">
+                                        Reset
+                                    </button>
+                                </div>
+                                <div id="search-results-container"
+                                     class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid"
+                                     role="listbox">
+                                    <ul id="searchResults" class="slds-listbox slds-listbox_vertical"
+                                        role="presentation">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-global-header__item">
+                <ul class="slds-global-actions">
+                    <li class="slds-global-actions__item">
+                        <a href="#faq" class="slds-button" data-orgchart-feature="faq">FAQ</a>
+                    </li>
+                    <li class="slds-global-actions__item">
+                        <a href="#contact" class="slds-button" data-orgchart-feature="contact">Contact</a>
+                    </li>
+                    <li class="slds-global-actions__item">
+                        <a href="#settings" id="orgchart-settings-link" class="slds-button" data-orgchart-feature="settings">Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section class="content-section">
+            <div id="org-tree">
+                <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+            <div class="slds-card" id="accordion">
+                <ul class="slds-accordion">
+                    <li class="slds-accordion__list-item">
+                        <section id="collapse" class="slds-accordion__section">
+                            <div class="slds-accordion__summary">
+                                <h6 class="slds-accordion__summary-heading">
+                                    <button type="button" onclick="cardCollapse();" aria-controls="accordion-details"
+                                            aria-expanded="true"
+                                            class="slds-button slds-button_reset slds-accordion__summary-action">
+                                        <span id="toggle-title">Click node for details</span>
+                                    </button>
+                                </h6>
+                            </div>
+                            <div class="slds-accordion__content" id="detailsWrapper">
+                                <div id="details"></div>
+                            </div>
+                        </section>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <div id="modal-wrapper">
+            <section id="modal-section" role="dialog" tabindex="-1" aria-labelledby="model-heading" aria-modal="true"
+                     aria-describedby="modal-content" class="slds-modal slds-backdrop slds-fade-in-open">
+                <div id="overlay" class="slds-modal__container">
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer class="slds-theme_default slds-grid slds-p-horizontal_medium slds-p-vertical_x-small">
+        <div class="slds-col">
+            Chart data comes from active Salesforce users and <code>User.ManagerId</code>. Adjust sharing and FLS as required for your org.
+        </div>
+        <div class="slds-col slds-text-align_right">
+            Refreshed: <span id="dateStringHolder" class="font-weight_bold"></span>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
+</apex:page>

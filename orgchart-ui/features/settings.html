@@ -1,0 +1,23 @@
+<div class="slds-modal__header">
+    <h2 id="model-heading" class="slds-modal__title">Display settings</h2>
+    <button type="button" class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" id="modal-close" title="Close" data-orgchart-close="1">
+        <span class="slds-assistive-text">Close</span>
+        <span aria-hidden="true" class="slds-text-heading_small">×</span>
+    </button>
+</div>
+<div class="slds-modal__content slds-p-around_medium" id="modal-content">
+    <fieldset class="slds-form-element">
+        <legend class="slds-form-element__legend slds-form-element__label">Visible on chart</legend>
+        <div class="slds-form-element__control">
+            <label class="slds-checkbox"><input type="checkbox" name="display" value="name" checked="checked" onchange="saveSettings(event);"/><span class="slds-checkbox_faux"></span><span class="slds-form-element__label">Name</span></label>
+            <label class="slds-checkbox"><input type="checkbox" name="display" value="pronoun" onchange="saveSettings(event);"/><span class="slds-checkbox_faux"></span><span class="slds-form-element__label">Pronoun (from About Me preview)</span></label>
+            <label class="slds-checkbox"><input type="checkbox" name="display" value="title" onchange="saveSettings(event);"/><span class="slds-checkbox_faux"></span><span class="slds-form-element__label">Title</span></label>
+            <label class="slds-checkbox"><input type="checkbox" name="display" value="reportInfo" onchange="saveSettings(event);"/><span class="slds-checkbox_faux"></span><span class="slds-form-element__label">Report counts</span></label>
+            <label class="slds-checkbox"><input type="checkbox" name="display" value="fteOnly" onchange="saveSettings(event);"/><span class="slds-checkbox_faux"></span><span class="slds-form-element__label">Standard users only (UserType = Standard)</span></label>
+        </div>
+    </fieldset>
+    <p class="slds-text-body_small slds-m-top_small">Settings are stored in the browser (localStorage).</p>
+</div>
+<div class="slds-modal__footer">
+    <button type="button" class="slds-button slds-button_neutral" data-orgchart-close="1">Close</button>
+</div>
