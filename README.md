@@ -1,6 +1,6 @@
 # Salesforce Org Chart (User.ManagerId + D3)
 
-Metadata lives under `force-app/main/default`. There is **no employee data** in the repo: hierarchy, search, and profile payloads are built at runtime from **active `User`** rows and **`User.ManagerId`**.
+Disclaimer: Cursor AI was used to create this functionality after examining a salesforce.com org chart visualforce implementation. AI can make mistakes. Structure: Metadata lives under `force-app/main/default`. There is **no employee data** in the repo: hierarchy, search, and profile payloads are built at runtime from **active `User`** rows and **`User.ManagerId`**. 
 
 ## How the root and top of the chart are determined
 
